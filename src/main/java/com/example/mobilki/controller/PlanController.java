@@ -3,9 +3,10 @@ package com.example.mobilki.controller;
 import com.example.mobilki.model.Plan;
 import com.example.mobilki.model.User;
 import com.example.mobilki.repo.PlanRepository;
+import com.example.mobilki.repo.PlanSeqRepository;
 import com.example.mobilki.repo.UserRepository;
+import com.example.mobilki.service.PlanSeqService;
 import com.example.mobilki.util.PlanBox;
-import com.example.mobilki.util.ProgressBox;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +21,15 @@ import java.util.Map;
 public class PlanController {
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
+    private final PlanSeqRepository planSeqRepository;
+    private final PlanSeqService planSeqService;
 
     @Autowired
-    public PlanController(PlanRepository planRepository, UserRepository userRepository) {
+    public PlanController(PlanRepository planRepository, UserRepository userRepository, PlanSeqRepository planSeqRepository, PlanSeqService planSeqService) {
         this.planRepository = planRepository;
         this.userRepository = userRepository;
+        this.planSeqRepository = planSeqRepository;
+        this.planSeqService = planSeqService;
     }
 
     @GetMapping(path = "/plan")
@@ -33,12 +38,19 @@ public class PlanController {
         return planRepository.findById(0).get();
     }
 
+    @GetMapping(path = "/planSeq")
+    Integer getPlanSeq() {
+        log.info("/planSeq");
+        return planSeqRepository.findById(0).get().getNumber();
+    }
+
     @PostMapping(path = "/plan")
     String addPlan(@RequestBody PlanBox plan) {
         log.info(plan.getPlan());
         Plan currentPlan = planRepository.findById(0).get();
         currentPlan.setInfo(plan.getPlan());
         planRepository.save(currentPlan);
+        planSeqService.getPlanSeq();
         return "OK";
     }
 

@@ -2,13 +2,12 @@ package com.example.mobilki.model;
 
 import com.example.mobilki.util.SignInBox;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.OptionalInt;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 @Getter
